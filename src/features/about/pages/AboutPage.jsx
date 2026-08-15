@@ -1,11 +1,19 @@
+import AboutHero from "../sections/AboutHero";
+import FounderStory from "../sections/FounderStory";
+import Philosophy from "../sections/Philosophy";
+import Journey from "../sections/Journey";
+import AboutCTA from "../sections/AboutCTA";
+
 function AboutPage() {
-    return (
-      <section className="section">
-        <div className="container">
-          <h1 className="text-6xl text-amber-400">About</h1>
-        </div>
-      </section>
-    );
-  }
-  
-  export default AboutPage;
+  return (
+    <>
+      <AboutHero />
+      <FounderStory />
+      <Philosophy />
+      <Journey />
+      <AboutCTA />
+    </>
+  );
+}
+
+export default AboutPage;
