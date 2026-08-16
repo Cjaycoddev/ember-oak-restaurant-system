@@ -168,3 +168,286 @@ section {
   background: #d7b56f;
 }
 
+/* =========================================================
+   RESERVATIONS
+   ========================================================= */
+
+   .reservation-page {
+    background: #f7f3ed;
+    color: #1c1916;
+  }
+  
+  .reservation-hero {
+    position: relative;
+    min-height: 72vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(18, 14, 11, 0.88) 0%,
+        rgba(18, 14, 11, 0.58) 48%,
+        rgba(18, 14, 11, 0.28) 100%
+      ),
+      url("./assets/images/hero/hero-restaurant.jpg") center / cover no-repeat;
+  }
+  
+  .reservation-hero__content {
+    position: relative;
+    z-index: 2;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    color: #fff;
+  }
+  
+  .reservation-hero h1 {
+    max-width: 760px;
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(4rem, 8vw, 7.5rem);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+  
+  .reservation-hero h1 span,
+  .reservation-copy h2 span {
+    color: #b58b52;
+  }
+  
+  .reservation-hero__intro {
+    max-width: 570px;
+    margin-top: 2rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  
+  .eyebrow {
+    margin-bottom: 1rem;
+    color: #a57b45;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  
+  .reservation-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1fr);
+    gap: clamp(4rem, 8vw, 9rem);
+    align-items: start;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+  
+  .reservation-copy {
+    position: sticky;
+    top: 7rem;
+  }
+  
+  .reservation-copy h2 {
+    margin: 0;
+    max-width: 500px;
+    font-family: "Cormorant Garamond", serif;
+    font-size: clamp(3.5rem, 6vw, 5.5rem);
+    font-weight: 500;
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+  }
+  
+  .reservation-copy > p:not(.eyebrow) {
+    max-width: 500px;
+    margin-top: 2rem;
+    color: #6e675f;
+    font-size: 1rem;
+    line-height: 1.9;
+  }
+  
+  .reservation-note {
+    max-width: 500px;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(28, 25, 22, 0.14);
+  }
+  
+  .reservation-note span {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+  }
+  
+  .reservation-note p {
+    margin-top: 0.8rem;
+    color: #7a726a;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+  
+  .reservation-card {
+    padding: clamp(2rem, 4vw, 4rem);
+    background: #fff;
+    border: 1px solid rgba(28, 25, 22, 0.09);
+    box-shadow: 0 25px 80px rgba(28, 25, 22, 0.08);
+  }
+  
+  .reservation-card__heading {
+    margin-bottom: 2.5rem;
+  }
+  
+  .reservation-card h3 {
+    margin: 0;
+    font-family: "Cormorant Garamond", serif;
+    font-size: 2.7rem;
+    font-weight: 500;
+  }
+  
+  .reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+  }
+  
+  .reservation-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+  
+  .reservation-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    color: #514a43;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  
+  .reservation-form input,
+  .reservation-form select,
+  .reservation-form textarea {
+    width: 100%;
+    border: 1px solid rgba(28, 25, 22, 0.16);
+    border-radius: 0;
+    background: #faf8f5;
+    padding: 0.95rem 1rem;
+    color: #1c1916;
+    font: inherit;
+    font-size: 0.92rem;
+    letter-spacing: normal;
+    text-transform: none;
+    outline: none;
+    transition:
+      border-color 180ms ease,
+      background 180ms ease;
+  }
+  
+  .reservation-form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .reservation-form input:focus,
+  .reservation-form select:focus,
+  .reservation-form textarea:focus {
+    border-color: #a57b45;
+    background: #fff;
+  }
+  
+  .reservation-divider {
+    height: 1px;
+    margin: 0.8rem 0;
+    background: rgba(28, 25, 22, 0.1);
+  }
+  
+  .reservation-submit {
+    margin-top: 0.7rem;
+    border: 0;
+    background: #211c18;
+    padding: 1.15rem 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition:
+      background 180ms ease,
+      transform 180ms ease;
+  }
+  
+  .reservation-submit:hover {
+    background: #a57b45;
+    transform: translateY(-2px);
+  }
+  
+  .reservation-disclaimer {
+    margin: 0;
+    color: #8a827a;
+    font-size: 0.7rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+  
+  @media (max-width: 900px) {
+    .reservation-layout {
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+  
+    .reservation-copy {
+      position: static;
+    }
+  }
+  
+  @media (max-width: 640px) {
+    .reservation-hero {
+      min-height: 80vh;
+    }
+  
+    .reservation-hero__content {
+      padding-top: 6rem;
+      padding-bottom: 5rem;
+    }
+  
+    .reservation-form__row {
+      grid-template-columns: 1fr;
+    }
+  
+    .reservation-layout {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+  
+    .reservation-card {
+      padding: 1.5rem;
+    }
+  }
+
+  .reservation-field-error {
+    display: block;
+    margin-top: 6px;
+    color: #c62828;
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+  
+  .reservation-form input[aria-invalid="true"],
+  .reservation-form select[aria-invalid="true"],
+  .reservation-form textarea[aria-invalid="true"] {
+    border-color: #c62828;
+  }
+  
+  .reservation-form input[aria-invalid="true"]:focus,
+  .reservation-form select[aria-invalid="true"]:focus,
+  .reservation-form textarea[aria-invalid="true"]:focus {
+    outline-color: #c62828;
+  }
+  
+  .reservation-form__message--error {
+    color: #c62828;
+  }
