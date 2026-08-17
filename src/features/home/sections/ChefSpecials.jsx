@@ -5,6 +5,7 @@ const specials = [
     title: "Herb Crusted Rack of Lamb",
     tag: "Chef's Signature",
     chef: "Chef Alessandro",
+    price: "KSh 5,900",
     image:
       "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=1400&q=90",
     description:
@@ -14,6 +15,7 @@ const specials = [
     title: "Seafood Paella",
     tag: "Seasonal Favourite",
     chef: "Chef Isabella",
+    price: "KSh 4,200",
     image:
       "https://images.unsplash.com/photo-1515443961218-a51367888e4b?auto=format&fit=crop&w=1400&q=90",
     description:
@@ -23,6 +25,7 @@ const specials = [
     title: "Crème Brûlée",
     tag: "Dessert Special",
     chef: "Chef Daniel",
+    price: "KSh 1,400",
     image:
       "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?auto=format&fit=crop&w=1400&q=90",
     description:
@@ -53,7 +56,7 @@ function ChefSpecials() {
           {specials.map((item) => (
             <article
               key={item.title}
-              className="group overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 transition-all duration-500 hover:-translate-y-2 hover:border-amber-400 hover:shadow-[0_20px_50px_rgba(200,164,93,0.18)]"
+              className="group flex h-full flex-col overflow-hidden border border-zinc-800 bg-zinc-900 transition-all duration-500 hover:-translate-y-2 hover:border-amber-400 hover:shadow-[0_20px_50px_rgba(200,164,93,0.18)]"
             >
               <div className="relative h-72 overflow-hidden">
                 <img
@@ -62,30 +65,36 @@ function ChefSpecials() {
                   className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                 />
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-              </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-              <div className="flex flex-col p-8">
-                <span className="text-xs uppercase tracking-[0.3rem] text-amber-400">
+                <span className="absolute bottom-5 left-6 text-xs uppercase tracking-[0.25rem] text-amber-400">
                   {item.tag}
                 </span>
+              </div>
 
-                <h3 className="mt-3 text-3xl text-white transition duration-300 group-hover:text-amber-400">
+              <div className="flex flex-1 flex-col p-8">
+                <h3 className="text-3xl text-white transition duration-300 group-hover:text-amber-400">
                   {item.title}
                 </h3>
 
-                <p className="mt-5 flex-grow leading-8 text-zinc-400">
+                <p className="mt-5 grow leading-8 text-zinc-400">
                   {item.description}
                 </p>
 
-                <div className="mt-8 flex items-center justify-between">
-                  <span className="text-sm font-medium text-zinc-500">
-                    {item.chef}
-                  </span>
+                <div className="mt-8 flex items-center justify-between gap-6">
+                  <div>
+                    <span className="block text-sm font-medium text-zinc-500">
+                      {item.chef}
+                    </span>
+
+                    <span className="mt-1 block text-xl font-semibold text-amber-400">
+                      {item.price}
+                    </span>
+                  </div>
 
                   <NavLink
-                    to="/menu"
-                    className="group inline-flex items-center gap-2 font-medium text-amber-400 transition-all duration-300 hover:text-white"
+                    to="/menu#specials"
+                    className="group inline-flex shrink-0 items-center gap-2 border border-amber-400 px-6 py-3 font-medium text-amber-400 transition-all duration-300 hover:bg-amber-400 hover:text-black"
                   >
                     <span>Discover</span>
 

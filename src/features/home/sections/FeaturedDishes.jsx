@@ -4,7 +4,7 @@ const dishes = [
   {
     name: "Wagyu Ribeye",
     category: "Chef's Choice",
-    price: "$78",
+    price: "KSh 7,800",
     image:
       "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1400&q=90",
     description:
@@ -13,7 +13,7 @@ const dishes = [
   {
     name: "Atlantic Salmon",
     category: "Fresh Catch",
-    price: "$34",
+    price: "KSh 3,400",
     image:
       "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=1400&q=90",
     description:
@@ -22,7 +22,7 @@ const dishes = [
   {
     name: "Lobster Linguine",
     category: "House Favourite",
-    price: "$46",
+    price: "KSh 4,600",
     image:
       "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1400&q=90",
     description:
@@ -53,7 +53,7 @@ function FeaturedDishes() {
           {dishes.map((dish) => (
             <article
               key={dish.name}
-              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 transition-all duration-500 hover:-translate-y-2 hover:border-amber-400 hover:shadow-[0_20px_50px_rgba(200,164,93,0.18)]"
+              className="group flex h-full flex-col overflow-hidden border border-zinc-800 bg-zinc-900 transition-all duration-500 hover:-translate-y-2 hover:border-amber-400 hover:shadow-[0_20px_50px_rgba(200,164,93,0.18)]"
             >
               <div className="relative h-72 overflow-hidden">
                 <img
@@ -62,7 +62,7 @@ function FeaturedDishes() {
                   className="h-full w-full object-cover object-center transition-transform duration-700 group-hover:scale-110"
                 />
 
-                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/15 to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
               </div>
 
               <div className="flex flex-1 flex-col p-8">
@@ -78,14 +78,14 @@ function FeaturedDishes() {
                   {dish.description}
                 </p>
 
-                <div className="mt-8 flex items-center justify-between">
-                  <span className="text-3xl font-bold text-amber-400">
+                <div className="mt-8 flex items-center justify-between gap-6">
+                  <span className="text-xl font-semibold text-amber-400">
                     {dish.price}
                   </span>
 
                   <NavLink
-                    to="/menu"
-                    className="rounded-xl border border-amber-400 px-6 py-3 font-medium text-amber-400 transition-all duration-300 hover:bg-amber-400 hover:text-black hover:shadow-lg"
+                    to="/menu#featured"
+                    className="shrink-0 border border-amber-400 px-6 py-3 font-medium text-amber-400 transition-all duration-300 hover:bg-amber-400 hover:text-black hover:shadow-lg"
                   >
                     View Details →
                   </NavLink>
