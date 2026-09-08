@@ -1,17 +1,88 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import reservationImage from "../../../assets/images/interiors/reservation-hero.jpg";
 import { supabase } from "../../../lib/supabase";
 
-const getToday = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
+const MIN_LEAD_TIME_MINUTES = 60;
+const MAX_STANDARD_GUESTS = 10;
+const MAX_LARGE_PARTY_GUESTS = 50;
+const NAIROBI_TIME_ZONE = "Africa/Nairobi";
 
-  return `${year}-${month}-${day}`;
+const getToday = () => {
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone: NAIROBI_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  return formatter.format(new Date());
 };
 
-const normalizeName = (value) => {
+const getNairobiParts = (date = new Date()) => {
+  const formatter = new Intl.DateTimeFormat("en-GB", {
+    timeZone: NAIROBI_TIME_ZONE,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const values = {};
+
+  for (const part of parts) {
+    if (part.type !== "literal") {
+      values[part.type] = part.value;
+    }
+  }
+
+  return {
+    year: Number(values.year),
+    month: Number(values.month),
+    day: Number(values.day),
+    hour: Number(values.hour),
+    minute: Number(values.minute),
+  };
+};
+
+const getNairobiDateTimeFromForm = (date, time) => {
+  if (!date || !time) return null;
+
+  const reservationDateTime = new Date(
+    `${date}T${time}:00+03:00`
+  );
+
+  if (Number.isNaN(reservationDateTime.getTime())) {
+    return null;
+  }
+
+  return reservationDateTime;
+};
+
+const isWithinMinimumLeadTime = (date, time) => {
+  const reservationDateTime = getNairobiDateTimeFromForm(
+    date,
+    time
+  );
+
+  if (!reservationDateTime) return false;
+
+  const minimumAllowedDateTime = new Date(
+    Date.now() + MIN_LEAD_TIME_MINUTES * 60 * 1000
+  );
+
+  return reservationDateTime >= minimumAllowedDateTime;
+};
+
+const getMinimumReservationDateTime = () => {
+  return new Date(
+    Date.now() + MIN_LEAD_TIME_MINUTES * 60 * 1000
+  );
+};
+
+const normalizeName = (value = "") => {
   return value
     .replace(/[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g, "")
     .replace(/\s+/g, " ")
@@ -24,7 +95,7 @@ const normalizeName = (value) => {
     );
 };
 
-const normalizePhone = (value) => {
+const normalizePhone = (value = "") => {
   return value.replace(/\D/g, "").slice(0, 10);
 };
 
@@ -36,11 +107,22 @@ const isValidEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
 };
 
+const isValidName = (name) => {
+  return (
+    name.length >= 2 &&
+    name.length <= 50 &&
+    /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[ '-][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/.test(
+      name
+    )
+  );
+};
+
 function ReservationsPage() {
   const [formData, setFormData] = useState({
     date: "",
     time: "",
     guests: "2",
+    customGuests: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -53,7 +135,18 @@ function ReservationsPage() {
   const [submitError, setSubmitError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const today = getToday();
+  const today = useMemo(() => getToday(), []);
+
+  const minimumReservationTime = useMemo(() => {
+    const minimumDateTime = getMinimumReservationDateTime();
+    const parts = getNairobiParts(minimumDateTime);
+
+    return `${String(parts.hour).padStart(2, "0")}:${String(
+      parts.minute
+    ).padStart(2, "0")}`;
+  }, []);
+
+  const isLargeParty = formData.guests === "more";
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -70,9 +163,20 @@ function ReservationsPage() {
       nextValue = normalizePhone(value);
     }
 
+    if (name === "requests") {
+      nextValue = value.slice(0, 1000);
+    }
+
+    if (name === "customGuests") {
+      nextValue = value.replace(/\D/g, "").slice(0, 2);
+    }
+
     setFormData((current) => ({
       ...current,
       [name]: nextValue,
+      ...(name === "guests" && value !== "more"
+        ? { customGuests: "" }
+        : {}),
     }));
 
     setSubmitMessage("");
@@ -81,20 +185,32 @@ function ReservationsPage() {
     setFieldErrors((current) => ({
       ...current,
       [name]: "",
+      ...(name === "guests"
+        ? { customGuests: "" }
+        : {}),
     }));
   };
 
   const handleNameBlur = (event) => {
     const { name, value } = event.target;
+    const normalized = normalizeName(value);
 
     setFormData((current) => ({
       ...current,
-      [name]: normalizeName(value),
+      [name]: normalized,
+    }));
+
+    setFieldErrors((current) => ({
+      ...current,
+      [name]:
+        normalized && !isValidName(normalized)
+          ? "Please enter a valid name using letters, spaces, apostrophes or hyphens."
+          : "",
     }));
   };
 
   const handleEmailBlur = (event) => {
-    const value = event.target.value.trim();
+    const value = event.target.value.trim().toLowerCase();
 
     setFormData((current) => ({
       ...current,
@@ -116,7 +232,12 @@ function ReservationsPage() {
   };
 
   const handlePhoneBlur = () => {
-    const phone = formData.phone;
+    const phone = normalizePhone(formData.phone);
+
+    setFormData((current) => ({
+      ...current,
+      phone,
+    }));
 
     if (!phone) {
       setFieldErrors((current) => ({
@@ -145,26 +266,64 @@ function ReservationsPage() {
 
     const firstName = normalizeName(formData.firstName);
     const lastName = normalizeName(formData.lastName);
-    const email = formData.email.trim();
+    const email = formData.email.trim().toLowerCase();
     const phone = normalizePhone(formData.phone);
+    const requests = formData.requests.trim();
+
+    let guestCount = null;
+
+    if (formData.guests === "more") {
+      guestCount = Number(formData.customGuests);
+
+      if (!formData.customGuests) {
+        errors.customGuests =
+          "Please enter the number of guests for your party.";
+      } else if (
+        !Number.isInteger(guestCount) ||
+        guestCount < 11 ||
+        guestCount > MAX_LARGE_PARTY_GUESTS
+      ) {
+        errors.customGuests =
+          "Please enter a number between 11 and 50 guests.";
+      }
+    } else {
+      guestCount = Number(formData.guests);
+
+      if (
+        !Number.isInteger(guestCount) ||
+        guestCount < 1 ||
+        guestCount > MAX_STANDARD_GUESTS
+      ) {
+        errors.guests = "Please select a valid number of guests.";
+      }
+    }
 
     if (!firstName) {
       errors.firstName = "Please enter your first name.";
+    } else if (!isValidName(firstName)) {
+      errors.firstName =
+        "Please enter a valid first name using letters, spaces, apostrophes or hyphens.";
     }
 
     if (!lastName) {
       errors.lastName = "Please enter your last name.";
+    } else if (!isValidName(lastName)) {
+      errors.lastName =
+        "Please enter a valid last name using letters, spaces, apostrophes or hyphens.";
     }
 
     if (!email) {
       errors.email = "Please enter your email address.";
+    } else if (email.length > 254) {
+      errors.email = "Please enter a valid email address.";
     } else if (!isValidEmail(email)) {
       errors.email =
         "Please enter a valid email address, for example: name@example.com";
     }
 
     if (!phone) {
-      errors.phone = "Please enter your 10-digit Kenyan phone number.";
+      errors.phone =
+        "Please enter your 10-digit Kenyan phone number.";
     } else if (!isValidPhone(phone)) {
       errors.phone =
         "Enter 10 digits starting with 07 or 01, for example 0712345678.";
@@ -180,8 +339,21 @@ function ReservationsPage() {
       errors.time = "Please select a preferred time.";
     }
 
-    if (!formData.guests) {
-      errors.guests = "Please select the number of guests.";
+    if (
+      formData.date &&
+      formData.time &&
+      formData.date >= today &&
+      !isWithinMinimumLeadTime(
+        formData.date,
+        formData.time
+      )
+    ) {
+      errors.time = `Please choose a time at least ${MIN_LEAD_TIME_MINUTES} minutes from now.`;
+    }
+
+    if (requests.length > 1000) {
+      errors.requests =
+        "Special requests must be 1000 characters or fewer.";
     }
 
     setFormData((current) => ({
@@ -190,40 +362,111 @@ function ReservationsPage() {
       lastName,
       email,
       phone,
+      requests,
     }));
 
     setFieldErrors(errors);
 
-    return Object.keys(errors).length === 0;
+    return {
+      valid: Object.keys(errors).length === 0,
+      errors,
+      guestCount,
+    };
+  };
+
+  const focusFirstInvalidField = (errors) => {
+    const fieldOrder = [
+      "date",
+      "time",
+      "guests",
+      "customGuests",
+      "firstName",
+      "lastName",
+      "email",
+      "phone",
+      "requests",
+    ];
+
+    const firstInvalidField = fieldOrder.find(
+      (field) => errors[field]
+    );
+
+    if (!firstInvalidField) return;
+
+    requestAnimationFrame(() => {
+      const element = document.querySelector(
+        `[name="${firstInvalidField}"]`
+      );
+
+      if (element) {
+        element.focus();
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (isSubmitting) return;
 
     setIsSubmitting(true);
     setSubmitMessage("");
     setSubmitError("");
 
     try {
-      const isValid = validateForm();
+      const { valid, errors, guestCount } =
+        validateForm();
 
-      if (!isValid) {
+      if (!valid) {
         setSubmitError(
           "Please correct the highlighted fields before submitting your reservation."
         );
+
+        focusFirstInvalidField(errors);
         return;
       }
 
-      const cleanedFirstName = normalizeName(formData.firstName);
-      const cleanedLastName = normalizeName(formData.lastName);
-      const cleanedEmail = formData.email.trim().toLowerCase();
-      const cleanedPhone = normalizePhone(formData.phone);
+      const cleanedFirstName = normalizeName(
+        formData.firstName
+      );
 
-      // Convert:
-      // 0712345678 -> +254712345678
-      // 0112345678 -> +254112345678
-      const internationalPhone = `+254${cleanedPhone.slice(1)}`;
+      const cleanedLastName = normalizeName(
+        formData.lastName
+      );
 
+      const cleanedEmail = formData.email
+        .trim()
+        .toLowerCase();
+
+      const cleanedPhone = normalizePhone(
+        formData.phone
+      );
+
+      const cleanedRequests =
+        formData.requests.trim();
+
+      /*
+       * Convert:
+       * 0712345678 -> +254712345678
+       * 0112345678 -> +254112345678
+       */
+      const internationalPhone = `+254${cleanedPhone.slice(
+        1
+      )}`;
+
+      /*
+       * The Edge Function receives the actual guest count.
+       *
+       * Normal party:
+       * guests = 1–10
+       *
+       * Large party:
+       * guests = custom number, 11–50
+       */
       const reservationPayload = {
         firstName: cleanedFirstName,
         lastName: cleanedLastName,
@@ -231,16 +474,17 @@ function ReservationsPage() {
         phone: internationalPhone,
         date: formData.date,
         time: formData.time,
-        guests: formData.guests,
-        requests: formData.requests.trim(),
+        guests: guestCount,
+        specialRequests: cleanedRequests,
       };
 
-      const { data, error } = await supabase.functions.invoke(
-        "create-reservation",
-        {
-          body: reservationPayload,
-        }
-      );
+      const { data, error } =
+        await supabase.functions.invoke(
+          "create-reservation",
+          {
+            body: reservationPayload,
+          }
+        );
 
       if (error) {
         throw error;
@@ -248,18 +492,25 @@ function ReservationsPage() {
 
       if (!data?.success) {
         throw new Error(
-          data?.error || "Reservation could not be created."
+          data?.error ||
+            "Reservation could not be created."
         );
       }
 
+      const reference =
+        data?.reservation?.reference;
+
       setSubmitMessage(
-        `Your reservation request has been received. Reference: ${data.reservation.reference}`
+        reference
+          ? `Your reservation request has been received. Reference: ${reference}`
+          : "Your reservation request has been received. Our team will review it and contact you by email."
       );
 
       setFormData({
         date: "",
         time: "",
         guests: "2",
+        customGuests: "",
         firstName: "",
         lastName: "",
         email: "",
@@ -269,9 +520,32 @@ function ReservationsPage() {
 
       setFieldErrors({});
     } catch (error) {
-      setSubmitError(
-        "We couldn't submit your reservation right now. Please check your details and try again."
+      console.error(
+        "Reservation submission error:",
+        error
       );
+
+      const message =
+        error?.context?.error ||
+        error?.message ||
+        "";
+
+      const lowerMessage =
+        message.toLowerCase();
+
+      if (
+        lowerMessage.includes("60") ||
+        lowerMessage.includes("minute") ||
+        lowerMessage.includes("already") ||
+        lowerMessage.includes("duplicate") ||
+        lowerMessage.includes("reservation")
+      ) {
+        setSubmitError(message);
+      } else {
+        setSubmitError(
+          "We couldn't submit your reservation right now. Please check your details and try again."
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -359,7 +633,9 @@ function ReservationsPage() {
                     onChange={handleChange}
                     min={today}
                     required
-                    aria-invalid={Boolean(fieldErrors.date)}
+                    aria-invalid={Boolean(
+                      fieldErrors.date
+                    )}
                   />
 
                   {fieldErrors.date && (
@@ -377,8 +653,15 @@ function ReservationsPage() {
                     name="time"
                     value={formData.time}
                     onChange={handleChange}
+                    min={
+                      formData.date === today
+                        ? minimumReservationTime
+                        : undefined
+                    }
                     required
-                    aria-invalid={Boolean(fieldErrors.time)}
+                    aria-invalid={Boolean(
+                      fieldErrors.time
+                    )}
                   />
 
                   {fieldErrors.time && (
@@ -396,16 +679,35 @@ function ReservationsPage() {
                   name="guests"
                   value={formData.guests}
                   onChange={handleChange}
+                  required
+                  aria-invalid={Boolean(
+                    fieldErrors.guests
+                  )}
                 >
-                  {Array.from({ length: 10 }, (_, index) => {
-                    const guests = index + 1;
+                  {Array.from(
+                    {
+                      length: MAX_STANDARD_GUESTS,
+                    },
+                    (_, index) => {
+                      const guests = index + 1;
 
-                    return (
-                      <option key={guests} value={guests}>
-                        {guests} {guests === 1 ? "guest" : "guests"}
-                      </option>
-                    );
-                  })}
+                      return (
+                        <option
+                          key={guests}
+                          value={guests}
+                        >
+                          {guests}{" "}
+                          {guests === 1
+                            ? "guest"
+                            : "guests"}
+                        </option>
+                      );
+                    }
+                  )}
+
+                  <option value="more">
+                    More than 10 guests
+                  </option>
                 </select>
 
                 {fieldErrors.guests && (
@@ -414,6 +716,52 @@ function ReservationsPage() {
                   </small>
                 )}
               </label>
+
+              {isLargeParty && (
+                <>
+                  <label>
+                    Number of guests
+
+                    <input
+                      type="number"
+                      name="customGuests"
+                      value={formData.customGuests}
+                      onChange={handleChange}
+                      min="11"
+                      max="50"
+                      step="1"
+                      inputMode="numeric"
+                      placeholder="Enter number of guests"
+                      required
+                      aria-invalid={Boolean(
+                        fieldErrors.customGuests
+                      )}
+                      aria-describedby="large-party-help"
+                    />
+
+                    <small id="large-party-help">
+                      Please enter the approximate number of guests, up to
+                      50.
+                    </small>
+
+                    {fieldErrors.customGuests && (
+                      <small className="reservation-field-error">
+                        {fieldErrors.customGuests}
+                      </small>
+                    )}
+                  </label>
+
+                  <div
+                    className="reservation-form__message reservation-form__message--success"
+                    role="note"
+                  >
+                    Larger party requests are reviewed individually by our
+                    team so we can make the appropriate arrangements for your
+                    visit. We will contact you by email once your request has
+                    been reviewed.
+                  </div>
+                </>
+              )}
 
               <div className="reservation-divider" />
 
@@ -429,10 +777,13 @@ function ReservationsPage() {
                     onBlur={handleNameBlur}
                     autoComplete="given-name"
                     pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]+"
+                    minLength="2"
                     maxLength="50"
                     placeholder="First name"
                     required
-                    aria-invalid={Boolean(fieldErrors.firstName)}
+                    aria-invalid={Boolean(
+                      fieldErrors.firstName
+                    )}
                   />
 
                   {fieldErrors.firstName && (
@@ -453,10 +804,13 @@ function ReservationsPage() {
                     onBlur={handleNameBlur}
                     autoComplete="family-name"
                     pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]+"
+                    minLength="2"
                     maxLength="50"
                     placeholder="Last name"
                     required
-                    aria-invalid={Boolean(fieldErrors.lastName)}
+                    aria-invalid={Boolean(
+                      fieldErrors.lastName
+                    )}
                   />
 
                   {fieldErrors.lastName && (
@@ -481,9 +835,13 @@ function ReservationsPage() {
                   maxLength="254"
                   placeholder="name@example.com"
                   required
-                  aria-invalid={Boolean(fieldErrors.email)}
+                  aria-invalid={Boolean(
+                    fieldErrors.email
+                  )}
                   aria-describedby={
-                    fieldErrors.email ? "email-error" : undefined
+                    fieldErrors.email
+                      ? "email-error"
+                      : undefined
                   }
                 />
 
@@ -513,9 +871,13 @@ function ReservationsPage() {
                   maxLength="10"
                   placeholder="0712345678"
                   required
-                  aria-invalid={Boolean(fieldErrors.phone)}
+                  aria-invalid={Boolean(
+                    fieldErrors.phone
+                  )}
                   aria-describedby={
-                    fieldErrors.phone ? "phone-error" : "phone-help"
+                    fieldErrors.phone
+                      ? "phone-error"
+                      : "phone-help"
                   }
                 />
 
@@ -543,13 +905,23 @@ function ReservationsPage() {
                   rows="4"
                   maxLength="1000"
                   placeholder="Dietary requirements, celebrations, accessibility needs..."
+                  aria-invalid={Boolean(
+                    fieldErrors.requests
+                  )}
                 />
+
+                {fieldErrors.requests && (
+                  <small className="reservation-field-error">
+                    {fieldErrors.requests}
+                  </small>
+                )}
               </label>
 
               {submitMessage && (
                 <div
                   className="reservation-form__message reservation-form__message--success"
                   role="status"
+                  aria-live="polite"
                 >
                   {submitMessage}
                 </div>
@@ -559,6 +931,7 @@ function ReservationsPage() {
                 <div
                   className="reservation-form__message reservation-form__message--error"
                   role="alert"
+                  aria-live="assertive"
                 >
                   {submitError}
                 </div>
@@ -568,6 +941,7 @@ function ReservationsPage() {
                 type="submit"
                 className="reservation-submit"
                 disabled={isSubmitting}
+                aria-disabled={isSubmitting}
               >
                 {isSubmitting
                   ? "Sending request..."

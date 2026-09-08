@@ -23,8 +23,8 @@ function ContactInfo() {
       icon: <Phone size={34} />,
       title: "Call Us",
       details: [
-        "+254 712 345 678",
-        "+254 700 123 456",
+        "+254 768 126 967",
+        "+254 729 836 734",
       ],
       id: "contact-phone",
     },
