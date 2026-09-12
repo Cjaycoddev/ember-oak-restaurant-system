@@ -1,4 +1,7 @@
 import { NavLink } from "react-router-dom";
+import wagyuRibeye from "../../../assets/images/menu/grill/wagyu-ribeye.jpg";
+import atlanticSalmon from "../../../assets/images/menu/seafood/atlantic-salmon.jpg";
+import lobsterLinguine from "../../../assets/images/menu/pasta/lobster-linguine.jpg";
 
 const dishes = [
   {
@@ -6,7 +9,7 @@ const dishes = [
     category: "Chef's Choice",
     price: "KSh 7,800",
     image:
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1400&q=90",
+      wagyuRibeye,
     description:
       "Premium Wagyu ribeye grilled over oak fire and finished with roasted garlic butter.",
   },
@@ -15,7 +18,7 @@ const dishes = [
     category: "Fresh Catch",
     price: "KSh 3,400",
     image:
-      "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=1400&q=90",
+      atlanticSalmon,
     description:
       "Fresh Atlantic salmon served with grilled asparagus, seasonal vegetables and lemon butter sauce.",
   },
@@ -24,7 +27,7 @@ const dishes = [
     category: "House Favourite",
     price: "KSh 4,600",
     image:
-      "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1400&q=90",
+      lobsterLinguine,
     description:
       "Fresh lobster folded into handmade linguine with garlic, herbs and a delicate parmesan cream.",
   },
@@ -84,7 +87,13 @@ function FeaturedDishes() {
                   </span>
 
                   <NavLink
-                    to="/menu#featured"
+                    to={
+                      dish.name === "Wagyu Ribeye"
+                        ? "/menu#dish-wagyu-ribeye"
+                        : dish.name === "Atlantic Salmon"
+                        ? "/menu#dish-atlantic-salmon"
+                        : "/menu#dish-lobster-linguine"
+                    }
                     className="shrink-0 border border-amber-400 px-6 py-3 font-medium text-amber-400 transition-all duration-300 hover:bg-amber-400 hover:text-black hover:shadow-lg"
                   >
                     View Details →

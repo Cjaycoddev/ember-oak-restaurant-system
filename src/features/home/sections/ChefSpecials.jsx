@@ -1,4 +1,7 @@
 import { NavLink } from "react-router-dom";
+import herbCrustedLamb from "../../../assets/images/menu/grill/herb-crusted-rack-of-lamb.jpg";
+import seafoodPaella from "../../../assets/images/menu/seafood/seafood-paella.jpg";
+import cremeBrulee from "../../../assets/images/menu/desserts/creme-brulee.jpg";
 
 const specials = [
   {
@@ -7,7 +10,7 @@ const specials = [
     chef: "Chef Alessandro",
     price: "KSh 5,900",
     image:
-      "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=1400&q=90",
+      herbCrustedLamb,
     description:
       "Tender New Zealand lamb finished with rosemary herbs, garlic and a rich red wine reduction.",
   },
@@ -17,7 +20,7 @@ const specials = [
     chef: "Chef Isabella",
     price: "KSh 4,200",
     image:
-      "https://images.unsplash.com/photo-1515443961218-a51367888e4b?auto=format&fit=crop&w=1400&q=90",
+      seafoodPaella,
     description:
       "Traditional Spanish saffron rice generously topped with prawns, mussels, calamari and fresh herbs.",
   },
@@ -27,7 +30,7 @@ const specials = [
     chef: "Chef Daniel",
     price: "KSh 1,400",
     image:
-      "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?auto=format&fit=crop&w=1400&q=90",
+      cremeBrulee,
     description:
       "Silky Madagascan vanilla custard finished with a perfectly caramelised sugar crust.",
   },
@@ -93,7 +96,13 @@ function ChefSpecials() {
                   </div>
 
                   <NavLink
-                    to="/menu#specials"
+                    to={
+                      item.title === "Herb Crusted Rack of Lamb"
+                        ? "/menu#dish-herb-crusted-rack-of-lamb"
+                        : item.title === "Seafood Paella"
+                        ? "/menu#dish-seafood-paella"
+                        : "/menu#dish-creme-brulee"
+                    }
                     className="group inline-flex shrink-0 items-center gap-2 border border-amber-400 px-6 py-3 font-medium text-amber-400 transition-all duration-300 hover:bg-amber-400 hover:text-black"
                   >
                     <span>Discover</span>

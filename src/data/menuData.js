@@ -5,7 +5,7 @@ const menuItems = [
     category: "From the Fire",
     price: "KSh 7,800",
     image:
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/grill/wagyu-ribeye.jpg",
     description:
       "Premium Wagyu ribeye grilled over oak fire and finished with roasted garlic butter.",
     featured: true,
@@ -17,7 +17,7 @@ const menuItems = [
     category: "From the Sea",
     price: "KSh 3,400",
     image:
-      "https://images.unsplash.com/photo-1482049016688-2d3e1b311543?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/seafood/atlantic-salmon.jpg",
     description:
       "Fresh salmon with grilled asparagus, seasonal vegetables and lemon butter.",
     featured: true,
@@ -29,7 +29,7 @@ const menuItems = [
     category: "Pasta & Grains",
     price: "KSh 4,600",
     image:
-      "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/pasta/lobster-linguine.jpg",
     description:
       "Handmade linguine with lobster, garlic, herbs and delicate parmesan cream.",
     featured: true,
@@ -42,7 +42,7 @@ const menuItems = [
     category: "Today's Specials",
     price: "KSh 5,200",
     image:
-      "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/grill/herb-crusted-rack-of-lamb.jpg",
     description:
       "Tender lamb finished with rosemary, garlic and a rich red wine reduction.",
     featured: false,
@@ -54,7 +54,7 @@ const menuItems = [
     category: "Today's Specials",
     price: "KSh 4,200",
     image:
-      "https://images.unsplash.com/photo-1515443961218-a51367888e4b?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/seafood/seafood-paella.jpg",
     description:
       "Saffron rice with prawns, mussels, calamari and fresh herbs.",
     featured: false,
@@ -62,11 +62,11 @@ const menuItems = [
   },
   {
     id: "creme-brulee",
-    name: "Crème Brûlée",
+    name: "Crè¨me Brè»lè©e",
     category: "Desserts",
     price: "KSh 1,200",
     image:
-      "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/desserts/creme-brulee.jpg",
     description:
       "Silky Madagascan vanilla custard finished with a crisp caramelised crust.",
     featured: false,
@@ -79,7 +79,7 @@ const menuItems = [
     category: "Starters",
     price: "KSh 2,600",
     image:
-      "https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?auto=format&fit=crop&w=1400&q=90",
+      "/images/external/photo-1533777857889-4be7c70b33f7.jpg",
     description:
       "Slow-cooked octopus charred over fire with smoked paprika, herbs and citrus.",
     featured: false,
@@ -91,7 +91,7 @@ const menuItems = [
     category: "Starters",
     price: "KSh 2,400",
     image:
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/grill/wagyu-ribeye.jpg",
     description:
       "Thinly sliced smoked beef with parmesan, herbs, capers and toasted sourdough.",
     featured: false,
@@ -103,7 +103,7 @@ const menuItems = [
     category: "Mains",
     price: "KSh 2,900",
     image:
-      "https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/pasta/wild-mushroom-risotto.jpg",
     description:
       "Creamy arborio rice with roasted mushrooms, parmesan and fresh herbs.",
     featured: false,
@@ -115,7 +115,7 @@ const menuItems = [
     category: "From the Fire",
     price: "KSh 3,200",
     image:
-      "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/grill/ember-chicken-supreme.jpg",
     description:
       "Free-range chicken grilled over oak with roasted garlic jus and seasonal greens.",
     featured: false,
@@ -127,7 +127,7 @@ const menuItems = [
     category: "From the Sea",
     price: "KSh 4,400",
     image:
-      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1400&q=90",
+      "/images/menu/seafood/pan-seared-sea-bass.jpg",
     description:
       "Whole roasted sea bass with lemon, herbs, fennel and caper butter.",
     featured: false,
@@ -139,7 +139,7 @@ const menuItems = [
     category: "Sides",
     price: "KSh 900",
     image:
-      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=1400&q=90",
+      "/images/external/photo-1573080496219-bb080dd4f877.jpg",
     description:
       "Crisp hand-cut fries finished with truffle oil, parmesan and herbs.",
     featured: false,
@@ -151,7 +151,7 @@ const menuItems = [
     category: "Sides",
     price: "KSh 850",
     image:
-      "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=1400&q=90",
+      "/images/external/photo-1455619452474-d2be8b1e70cd.jpg",
     description:
       "Fire-charred broccolini with lemon, parmesan and chilli oil.",
     featured: false,
@@ -163,7 +163,7 @@ const menuItems = [
     category: "Desserts",
     price: "KSh 1,300",
     image:
-      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1400&q=90",
+      "/images/external/photo-1578985545062-69928b1d9587.jpg",
     description:
       "Dark chocolate ganache, buttery pastry and a touch of smoked sea salt.",
     featured: false,
@@ -191,3 +191,6 @@ export const specialDishes = menuItems.filter(
 );
 
 export default menuItems;
+
+
+

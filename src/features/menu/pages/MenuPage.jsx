@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import menuhero from "../../../assets/images/menu/hero/menu-hero.jpg";
 
 const menuSections = [
   {
@@ -13,7 +15,7 @@ const menuSections = [
           "Charred octopus, smoked paprika potatoes, preserved lemon and herb oil.",
         price: 1850,
         image:
-          "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/starters/ember-charred-octopus.jpg",
         tag: "Signature",
       },
       {
@@ -22,7 +24,7 @@ const menuSections = [
           "Creamy burrata, heirloom tomatoes, basil oil and aged balsamic.",
         price: 1650,
         image:
-          "https://images.unsplash.com/photo-1608897013039-887f21d8c804?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/starters/burrata-heirloom-tomato.jpg",
       },
       {
         name: "Wild Mushroom Croquettes",
@@ -30,7 +32,7 @@ const menuSections = [
           "Crisp mushroom croquettes, parmesan cream and roasted garlic.",
         price: 1350,
         image:
-          "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/starters/wild-mushroom-croquettes.jpg",
       },
       {
         name: "Beef Carpaccio",
@@ -38,7 +40,7 @@ const menuSections = [
           "Thinly sliced beef tenderloin, capers, parmesan and mustard dressing.",
         price: 1950,
         image:
-          "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/grill/wagyu-ribeye.jpg",
       },
     ],
   },
@@ -56,7 +58,7 @@ const menuSections = [
           "Premium Wagyu ribeye grilled over oak fire and finished with roasted garlic butter.",
         price: 7800,
         image:
-          "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/grill/wagyu-ribeye.jpg",
         tag: "Featured",
       },
       {
@@ -65,7 +67,7 @@ const menuSections = [
           "Tender New Zealand lamb, rosemary, garlic and red wine reduction.",
         price: 5200,
         image:
-          "https://images.unsplash.com/photo-1600891964092-4316c288032e?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/grill/herb-crusted-rack-of-lamb.jpg",
         tag: "Today's Special",
       },
       {
@@ -74,7 +76,7 @@ const menuSections = [
           "Premium beef tenderloin, smoked root vegetables and pepper jus.",
         price: 6100,
         image:
-          "https://images.unsplash.com/photo-1558030006-450675393462?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/grill/oak-smoked-beef-tenderloin.jpg",
       },
       {
         name: "Ember Chicken Supreme",
@@ -82,7 +84,7 @@ const menuSections = [
           "Fire-roasted chicken breast, charred corn, herbs and natural jus.",
         price: 3200,
         image:
-          "https://images.unsplash.com/photo-1532550907401-a500c9a57435?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/grill/ember-chicken-supreme.jpg",
       },
     ],
   },
@@ -100,7 +102,7 @@ const menuSections = [
           "Fresh salmon, grilled asparagus, seasonal vegetables and lemon butter.",
         price: 3400,
         image:
-          "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/seafood/atlantic-salmon.jpg",
         tag: "Featured",
       },
       {
@@ -109,7 +111,7 @@ const menuSections = [
           "Saffron rice with prawns, mussels, calamari and fresh herbs.",
         price: 3900,
         image:
-          "https://images.unsplash.com/photo-1515443961218-a51367888e4b?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/seafood/seafood-paella.jpg",
         tag: "Today's Special",
       },
       {
@@ -118,7 +120,7 @@ const menuSections = [
           "Tiger prawns, roasted garlic, chilli, lemon and grilled sourdough.",
         price: 2950,
         image:
-          "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/seafood/garlic-butter-prawns.jpg",
       },
       {
         name: "Pan-Seared Sea Bass",
@@ -126,7 +128,7 @@ const menuSections = [
           "Crisp-skinned sea bass, pea purée, fennel and citrus beurre blanc.",
         price: 4300,
         image:
-          "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/seafood/pan-seared-sea-bass.jpg",
       },
     ],
   },
@@ -144,7 +146,7 @@ const menuSections = [
           "Fresh lobster, handmade linguine, garlic, herbs and parmesan cream.",
         price: 4600,
         image:
-          "https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/pasta/lobster-linguine.jpg",
         tag: "Featured",
       },
       {
@@ -153,7 +155,7 @@ const menuSections = [
           "Arborio rice, wild mushrooms, parmesan and thyme.",
         price: 2750,
         image:
-          "https://images.unsplash.com/photo-1476124369491-e7addf5db371?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/pasta/wild-mushroom-risotto.jpg",
       },
       {
         name: "Truffle Tagliatelle",
@@ -161,7 +163,7 @@ const menuSections = [
           "Fresh tagliatelle, black truffle, parmesan and brown butter.",
         price: 3500,
         image:
-          "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/pasta/truffle-tagliatelle.jpg",
       },
       {
         name: "Penne Arrabbiata",
@@ -169,7 +171,7 @@ const menuSections = [
           "Italian tomato, roasted garlic, chilli, basil and parmesan.",
         price: 2100,
         image:
-          "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/pasta/penne-arrabbiata.jpg",
       },
     ],
   },
@@ -187,7 +189,7 @@ const menuSections = [
           "Dry-aged beef, aged cheddar, caramelised onion and house sauce.",
         price: 2600,
         image:
-          "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/mains/ember-oak-burger.jpg",
       },
       {
         name: "Roasted Vegetable Wellington",
@@ -195,7 +197,7 @@ const menuSections = [
           "Seasonal vegetables, mushroom duxelles and flaky pastry.",
         price: 2800,
         image:
-          "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/mains/roasted-vegetable-wellington.jpg",
       },
       {
         name: "Slow-Braised Beef Short Rib",
@@ -203,7 +205,7 @@ const menuSections = [
           "Eight-hour braised beef, silky mash, roasted carrots and jus.",
         price: 4100,
         image:
-          "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/grill/wagyu-ribeye.jpg",
       },
       {
         name: "Chicken & Herb Risotto",
@@ -211,7 +213,7 @@ const menuSections = [
           "Roasted chicken, parmesan risotto, garden herbs and jus.",
         price: 2900,
         image:
-          "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/mains/chicken-herb-risotto.jpg",
       },
     ],
   },
@@ -229,7 +231,7 @@ const menuSections = [
           "Madagascan vanilla custard finished with a caramelised sugar crust.",
         price: 1250,
         image:
-          "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/desserts/creme-brulee.jpg",
         tag: "Today's Special",
       },
       {
@@ -238,7 +240,7 @@ const menuSections = [
           "Warm dark chocolate cake, vanilla ice cream and cocoa soil.",
         price: 1450,
         image:
-          "https://images.unsplash.com/photo-1606313564200-e75d5e30476a?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/desserts/dark-chocolate-fondant.jpg",
       },
       {
         name: "Lemon & Passion Fruit Tart",
@@ -246,7 +248,7 @@ const menuSections = [
           "Bright citrus curd, passion fruit and toasted Italian meringue.",
         price: 1350,
         image:
-          "https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/desserts/lemon-passion-fruit-tart.jpg",
       },
       {
         name: "Seasonal Cheesecake",
@@ -254,7 +256,7 @@ const menuSections = [
           "Silky baked cheesecake with seasonal fruit and vanilla cream.",
         price: 1350,
         image:
-          "https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/desserts/seasonal-cheesecake.jpg",
       },
     ],
   },
@@ -272,7 +274,7 @@ const menuSections = [
           "Oak-smoked bourbon, bitters, orange and a touch of demerara.",
         price: 1800,
         image:
-          "https://images.unsplash.com/photo-1473973266408-ed4e27abdd47?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/drinks/ember-old-fashioned.jpg",
         tag: "Signature",
       },
       {
@@ -281,7 +283,7 @@ const menuSections = [
           "Passion fruit, citrus, sparkling water and fresh mint.",
         price: 950,
         image:
-          "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/drinks/passion-fruit-spritz.jpg",
       },
       {
         name: "Fresh Lime & Mint Cooler",
@@ -289,7 +291,7 @@ const menuSections = [
           "Fresh lime, mint, cane sugar and chilled sparkling water.",
         price: 750,
         image:
-          "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/drinks/fresh-lime-mint-cooler.jpg",
       },
       {
         name: "Espresso Martini",
@@ -297,7 +299,7 @@ const menuSections = [
           "Fresh espresso, coffee liqueur and vodka shaken until silky.",
         price: 1600,
         image:
-          "https://images.unsplash.com/photo-1619674078418-7e2e4d6b6a4d?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/drinks/espresso-martini.jpg",
       },
       {
         name: "House Iced Tea",
@@ -305,7 +307,7 @@ const menuSections = [
           "Cold-brewed black tea, citrus, mint and seasonal fruit.",
         price: 700,
         image:
-          "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/drinks/fresh-lime-mint-cooler.jpg",
       },
       {
         name: "Kenyan Single-Origin Coffee",
@@ -313,7 +315,7 @@ const menuSections = [
           "Freshly brewed specialty coffee from selected Kenyan estates.",
         price: 650,
         image:
-          "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=700&q=85",
+          "/images/menu/drinks/kenyan-single-origin-coffee.jpg",
       },
     ],
   },
@@ -330,9 +332,24 @@ const filterOptions = [
 const formatPrice = (price) =>
   new Intl.NumberFormat("en-KE").format(price);
 
-function MenuCard({ item }) {
+const getDishId = (name) =>
+  `dish-${name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")}`;
+
+function MenuCard({ item, dishId, highlighted = false }) {
   return (
-    <article className="group flex min-w-0 flex-col overflow-hidden border border-zinc-800 bg-[#151412] transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/70 hover:bg-[#191714]">
+    <article
+      id={dishId}
+      className={[
+        "group flex min-w-0 flex-col overflow-hidden border border-zinc-800 bg-[#151412] transition-all duration-300 hover:-translate-y-1 hover:border-amber-400/70 hover:bg-[#191714]",
+        dishId ? "scroll-mt-32" : "",
+        highlighted ? "dish-highlight" : "",
+      ].join(" ")}
+    >
       <div className="relative h-40 overflow-hidden">
         <img
           src={item.image}
@@ -370,9 +387,46 @@ function MenuCard({ item }) {
 }
 
 function MenuPage() {
+  const location = useLocation();
+
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [highlightedDish, setHighlightedDish] = useState("");
+
+  useEffect(() => {
+    const dishId = location.hash.replace("#", "");
+
+    if (!dishId.startsWith("dish-")) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      const element = document.getElementById(dishId);
+
+      if (!element) {
+        console.warn(
+          `Ember & Oak: dish element not found: ${dishId}`
+        );
+        return;
+      }
+
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      setHighlightedDish(dishId);
+
+      window.setTimeout(() => {
+        setHighlightedDish("");
+      }, 3000);
+    }, 150);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [location.hash]);
 
   const activeSection = useMemo(
     () =>
@@ -483,7 +537,7 @@ function MenuPage() {
       <section className="relative overflow-hidden border-b border-white/10">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=2200&q=90"
+            src={menuhero}
             alt="Elegant restaurant dining overlooking the coast"
             className="h-full w-full object-cover"
           />
@@ -776,12 +830,20 @@ function MenuPage() {
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  {section.items.map((item) => (
-                    <MenuCard
-                      key={item.name}
-                      item={item}
-                    />
-                  ))}
+                  {section.items.map((item) => {
+                    const dishId = getDishId(item.name);
+
+                    return (
+                      <MenuCard
+                        key={item.name}
+                        item={item}
+                        dishId={dishId}
+                        highlighted={
+                          highlightedDish === dishId
+                        }
+                      />
+                    );
+                  })}
                 </div>
               </section>
             ))}

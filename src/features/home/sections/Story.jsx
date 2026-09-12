@@ -1,5 +1,5 @@
-import interiorOne from "../../../assets/images/interiors/interior-1.jpg";
-import interiorTwo from "../../../assets/images/interiors/interior-2.jpg";
+import storyDining from "../../../assets/images/home/story/story-dining.jpg";
+import storyFire from "../../../assets/images/home/story/story-fire.jpg";
 
 function Story() {
   return (
@@ -13,7 +13,7 @@ function Story() {
 
             <div className="overflow-hidden rounded-3xl">
               <img
-                src={interiorOne}
+                src={storyDining}
                 alt="Restaurant interior"
                 className="h-[560px] w-full rounded-3xl object-cover transition-all duration-700 hover:scale-105"
               />
@@ -21,7 +21,7 @@ function Story() {
 
             <div className="mt-20 overflow-hidden rounded-3xl">
               <img
-                src={interiorTwo}
+                src={storyFire}
                 alt="Dining experience"
                 className="h-[560px] w-full rounded-3xl object-cover transition-all duration-700 hover:scale-105"
               />
